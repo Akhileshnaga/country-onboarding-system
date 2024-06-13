@@ -7,38 +7,55 @@
         function addColumn() {
             let container = document.getElementById("columns");
             let div = document.createElement("div");
+            div.classList.add("column-group");
             div.innerHTML = `
-                <input type="text" name="column_names" placeholder="Column Name">
-                <input type="text" name="column_types" placeholder="Column Type">
-                <select name="column_nullables">
+                <input type="text" name="column_names" placeholder="Column Name" required>
+                <input type="text" name="column_types" placeholder="Column Type" required>
+                <select name="column_nullables" required>
                     <option value="true">Nullable</option>
                     <option value="false">Not Nullable</option>
                 </select>
+                <button type="button" class="remove-column-btn" onclick="removeColumn(this)">
+                    <i class="fas fa-minus"></i>
+                </button>
             `;
             container.appendChild(div);
+        }
+
+        function removeColumn(button) {
+            let columnGroup = button.parentElement;
+            columnGroup.remove();
         }
     </script>
 </head>
 <body>
-    <h1>Input Database Schema</h1>
-    <form action="/submit" method="post">
-        <label for="table_name">Table Name:</label>
-        <input type="text" id="table_name" name="table_name" required><br><br>
+    <div class="container">
+        <h1>Input Database Schema</h1>
+        <form action="/submit" method="post">
+            <label for="table_name">Table Name:</label>
+            <input type="text" id="table_name" name="table_name" required><br>
 
-        <div id="columns">
-            <h3>Columns:</h3>
-            <div>
-                <input type="text" name="column_names" placeholder="Column Name">
-                <input type="text" name="column_types" placeholder="Column Type">
-                <select name="column_nullables">
-                    <option value="true">Nullable</option>
-                    <option value="false">Not Nullable</option>
-                </select>
+            <div id="columns">
+                <h3>Columns:</h3>
+                <div class="column-group">
+                    <input type="text" name="column_names" placeholder="Column Name" required>
+                    <input type="text" name="column_types" placeholder="Column Type" required>
+                    <select name="column_nullables" required>
+                        <option value="true">Nullable</option>
+                        <option value="false">Not Nullable</option>
+                    </select>
+                    <button type="button" class="remove-column-btn" onclick="removeColumn(this)">
+                        <i class="fas fa-minus"></i>
+                    </button>
+                </div>
             </div>
-        </div>
 
-        <button type="button" onclick="addColumn()">Add Column</button><br><br>
-        <input type="submit" value="Submit">
-    </form>
+            <button type="button" class="add-column-btn" onclick="addColumn()">
+                <i class="fas fa-plus"></i> Add Column
+            </button><br>
+            <input type="submit" value="Submit">
+        </form>
+    </div>
+    
 </body>
 </html>
