@@ -6,11 +6,6 @@ import models
 from database import engine, SessionLocal
 from sqlalchemy.orm import Session
 
-# from fastapi import Request, Form
-# from fastapi.responses import HTMLResponse
-# from fastapi.staticfiles import StaticFiles
-# from fastapi.templating import Jinja2Templates
-
 app = FastAPI()
 models.Base.metadata.create_all(bind=engine)
 
@@ -39,13 +34,19 @@ async def root():
 
 @app.post("/create_configuration")
 async def create_configuration(country: CountryBase, db: db_dependencies):
+    # checking if a country is present
+    country = db.query(models.Country).filter(models.Country.country_code == country.country_code).first()
+    
+    if country:
+        raise HTTPException(status_code=409, detail='Resource already exists')
+    
     db_country = models.Country(country_name=country.country_name, country_code=country.country_code)
     
     db.add(db_country)
     db.commit()
     db.refresh(db_country)
     
-    for detail in country.country_details:
+    for detail in country.country_details:        
         db_detail = models.Detail(detail_name=detail.detail_name, detail_type=detail.detail_type, country_id=db_country.id)
         db.add(db_detail)
         db.commit()
